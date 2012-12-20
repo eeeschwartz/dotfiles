@@ -12,7 +12,8 @@ autocmd BufReadPost *
 filetype plugin on
 syntax on
 filetype indent on
-
+" allow unsaved background buffers and remember marks/undo for them
+set hidden
 set paste
 set ruler
 
@@ -48,6 +49,10 @@ endif
 set tabstop=2
 set shiftwidth=2
 set expandtab
+set textwidth=80
+" colorcolumn appears at textwidth+1
+set colorcolumn=+1
+set autoindent
 
 au BufEnter *.js set sw=2 ts=2
 
