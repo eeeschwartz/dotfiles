@@ -98,13 +98,14 @@ endif
 " ------------------------------------------------------------------------------
 " RUNNING TESTS
 " ------------------------------------------------------------------------------
-map <leader>t :call RunTestFile()<cr>
+map <leader>t :call RunTestFile(0)<cr>
+map <leader>e :call RunTestFile(1)<cr>
 map <leader>T :call RunNearestTest()<cr>
 map <leader>a :call RunTests('')<cr>
 map <leader>c :w\|:!script/features<cr>
 map <leader>w :w\|:!script/features --profile wip<cr>
 
-function! RunTestFile(...)
+function! RunTestFile(external)
     if a:0
         let command_suffix = a:1
     else
@@ -118,7 +119,11 @@ function! RunTestFile(...)
     elseif !exists("t:grb_test_file")
         return
     end
-    call RunTests(t:grb_test_file . command_suffix)
+    if a:external
+      call RunTestsExternal(t:grb_test_file . command_suffix)
+    else
+      call RunTests(t:grb_test_file . command_suffix)
+    end
 endfunction
 
 function! RunNearestTest()
@@ -145,6 +150,25 @@ function! RunTests(filename)
     else
         if filereadable("script/test")
             exec ":!script/test " . a:filename
+        elseif filereadable("Gemfile")
+            exec ":!bundle exec rspec --color " . a:filename
+        else
+            exec ":!rspec --color " . a:filename
+        end
+    end
+endfunction
+
+function! RunTestsExternal(filename)
+    :w
+    :silent execute ":!~/bin/space-tdd-log.sh"
+    " :silent execute ":!rake &> ~/tmp/tdd.log &" | redraw!
+    if match(a:filename, '\.feature$') != -1
+        exec ":!script/features " . a:filename
+    else
+        if filereadable("script/test")
+            " exec ":!bundle exec rspec --color " . a:filename . " &> ~/tmp/tdd.log &"
+            " :silent execute ":!rspec spec/api &> ~/tmp/tdd.log &" | redraw!
+            :silent execute ":!script/test " . a:filename . "&> ~/tmp/tdd.log &" | redraw!
         elseif filereadable("Gemfile")
             exec ":!bundle exec rspec --color " . a:filename
         else
