@@ -103,7 +103,7 @@ map <leader>e :call RunTestFile(1)<cr>
 map <leader>T :call RunNearestTest()<cr>
 map <leader>a :call RunTests('')<cr>
 map <leader>c :w\|:!script/features<cr>
-map <leader>w :w\|:!script/features --profile wip<cr>
+map <leader>w :w<cr>
 
 function! RunTestFile(external)
     if a:0
@@ -149,6 +149,7 @@ function! RunTests(filename)
         exec ":!script/features " . a:filename
     else
         if filereadable("script/test")
+            " exec ":!script/test " . a:filename . "| tee ~/tmp/tdd.log"
             exec ":!script/test " . a:filename
         elseif filereadable("Gemfile")
             exec ":!bundle exec rspec --color " . a:filename
@@ -166,8 +167,6 @@ function! RunTestsExternal(filename)
         exec ":!script/features " . a:filename
     else
         if filereadable("script/test")
-            " exec ":!bundle exec rspec --color " . a:filename . " &> ~/tmp/tdd.log &"
-            " :silent execute ":!rspec spec/api &> ~/tmp/tdd.log &" | redraw!
             :silent execute ":!script/test " . a:filename . "&> ~/tmp/tdd.log &" | redraw!
         elseif filereadable("Gemfile")
             exec ":!bundle exec rspec --color " . a:filename
@@ -177,7 +176,32 @@ function! RunTestsExternal(filename)
     end
 endfunction
 
+
+" ------------------------------------------------------------------------------
+" Misc
+" ------------------------------------------------------------------------------
+" Clear the search buffer when hitting return
+function! MapCR()
+  nnoremap <cr> :nohlsearch<cr>
+endfunction
+call MapCR()
+
 " ------------------------------------------------------------------------------
 " Control P
 " ------------------------------------------------------------------------------
 let g:ctrlp_working_path_mode = 'r'
+
+" ------------------------------------------------------------------------------
+" MULTIPURPOSE TAB KEY
+" Indent if we're at the beginning of a line. Else, do completion.
+" ------------------------------------------------------------------------------
+function! InsertTabWrapper()
+    let col = col('.') - 1
+    if !col || getline('.')[col - 1] !~ '\k'
+      return "\<tab>"
+    else
+      return "\<c-p>"
+    endif
+endfunction
+inoremap <tab> <c-r>=InsertTabWrapper()<cr>
+inoremap <s-tab> <c-n>

@@ -24,7 +24,7 @@ DISABLE_AUTO_TITLE="true"
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(git github perl vi-mode)
+plugins=(git github perl)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -36,7 +36,7 @@ export EDITOR=vim
 export PAGER=less
 
 # setopt autolist automenu
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm" 
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm"
 
 
 PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
