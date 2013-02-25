@@ -153,8 +153,7 @@ function! RunTests(filename)
         exec ":!script/features " . a:filename
     else
         if filereadable("script/test")
-            " exec ":!script/test " . a:filename . "| tee ~/tmp/tdd.log"
-            exec ":!script/test " . a:filename
+            exec ":!script/test " . a:filename . " | tee ~/tmp/tdd.log"
         elseif filereadable("Gemfile")
             exec ":!bundle exec rspec --color " . a:filename
         else
