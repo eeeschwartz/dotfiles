@@ -100,14 +100,17 @@ endif
 " ------------------------------------------------------------------------------
 map <leader>t :call RunTestFile(0)<cr>
 map <leader>e :call RunTestFile(1)<cr>
-map <leader>T :call RunNearestTest()<cr>
+map <leader>T :call RunNearestTest(0)<cr>
+map <leader>E :call RunNearestTest(1)<cr>
 map <leader>a :call RunTests('')<cr>
 map <leader>c :w\|:!script/features<cr>
 map <leader>w :w<cr>
 
-function! RunTestFile(external)
-    if a:0
-        let command_suffix = a:1
+function! RunTestFile(...)
+    let external = a:1
+
+    if a:0 == 2
+        let command_suffix = a:2
     else
         let command_suffix = ""
     endif
@@ -119,16 +122,17 @@ function! RunTestFile(external)
     elseif !exists("t:grb_test_file")
         return
     end
-    if a:external
+
+    if external
       call RunTestsExternal(t:grb_test_file . command_suffix)
     else
       call RunTests(t:grb_test_file . command_suffix)
     end
 endfunction
 
-function! RunNearestTest()
+function! RunNearestTest(external)
     let spec_line_number = line('.')
-    call RunTestFile(":" . spec_line_number . " -b")
+    call RunTestFile(a:external, ":" . spec_line_number . " -b")
 endfunction
 
 function! SetTestFile()
