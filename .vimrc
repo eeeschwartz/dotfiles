@@ -106,6 +106,10 @@ map <leader>a :call RunTests('')<cr>
 map <leader>c :w\|:!script/features<cr>
 map <leader>w :w<cr>
 
+function! InTestFile()
+  return match(expand("%"), '\(.feature\|_spec.rb\)$') != -1
+endfunction
+
 function! RunTestFile(...)
     let external = a:1
 
@@ -115,10 +119,8 @@ function! RunTestFile(...)
         let command_suffix = ""
     endif
 
-    " Run the tests for the previously-marked file.
-    let in_test_file = match(expand("%"), '\(.feature\|_spec.rb\)$') != -1
-    if in_test_file
-        call SetTestFile()
+    if InTestFile()
+        call SetTestContext()
     elseif !exists("t:grb_test_file")
         return
     end
@@ -131,13 +133,14 @@ function! RunTestFile(...)
 endfunction
 
 function! RunNearestTest(external)
-    let spec_line_number = line('.')
-    call RunTestFile(a:external, ":" . spec_line_number . " -b")
+    call RunTestFile(a:external, ":" . t:spec_line_number . " -b")
 endfunction
 
-function! SetTestFile()
+function! SetTestContext()
     " Set the spec file that tests will be run for.
     let t:grb_test_file=@%
+    " Set line number in case running nearest test
+    let t:spec_line_number=line('.')
 endfunction
 
 function! RunTests(filename)
