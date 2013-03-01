@@ -98,65 +98,65 @@ endif
 " ------------------------------------------------------------------------------
 " RUNNING TESTS
 " ------------------------------------------------------------------------------
-map <leader>t :call RunTestFile(0)<cr>
-map <leader>e :call RunTestFile(1)<cr>
+map <leader>t :call RunTestFile(0, 0)<cr>
+map <leader>e :call RunTestFile(1, 0)<cr>
 map <leader>T :call RunNearestTest(0)<cr>
 map <leader>E :call RunNearestTest(1)<cr>
-map <leader>a :call RunTests('')<cr>
-map <leader>c :w\|:!script/features<cr>
+map <leader>a :call RunTests('', '', 1)<cr>
+" map <leader>c :w\|:!script/features<cr>
 map <leader>w :w<cr>
 
 function! InTestFile()
   return match(expand("%"), '\(.feature\|_spec.rb\)$') != -1
 endfunction
 
-function! RunTestFile(...)
-    let external = a:1
-
-    if a:0 == 2
-        let command_suffix = a:2
-    else
-        let command_suffix = ""
-    endif
-
+function! RunTestFile(external, nearest)
     if InTestFile()
         call SetTestContext()
     elseif !exists("t:grb_test_file")
         return
     end
 
-    if external
-      call RunTestsExternal(t:grb_test_file . command_suffix)
+    if a:nearest
+      let command_suffix = ":" . t:spec_line_number . " -b"
     else
-      call RunTests(t:grb_test_file . command_suffix)
+      let command_suffix = ""
     end
+
+    call RunTests(t:grb_test_file, command_suffix, a:external)
+    " if a:external
+    "   call RunTestsExternal(t:grb_test_file, command_suffix)
+    " else
+    "   call RunTests(t:grb_test_file, command_suffix, 0)
+    " end
 endfunction
 
 function! RunNearestTest(external)
-    call RunTestFile(a:external, ":" . t:spec_line_number . " -b")
+    call RunTestFile(a:external, 1)
 endfunction
 
 function! SetTestContext()
-    " Set the spec file that tests will be run for.
-    let t:grb_test_file=@%
     " Set line number in case running nearest test
     let t:spec_line_number=line('.')
+    " Set the spec file that tests will be run for.
+    let t:grb_test_file=@%
 endfunction
 
-function! RunTests(filename)
+function! RunTests(filename, command_suffix, external)
     " Write the file and run tests for the given filename
     :w
-    :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
-    :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
-    :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
-    :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
-    :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
-    :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
     if match(a:filename, '\.feature$') != -1
         exec ":!script/features " . a:filename
     else
         if filereadable("script/test")
-            exec ":!script/test " . a:filename . " | tee ~/tmp/tdd.log"
+            let command = a:filename . a:command_suffix
+            if a:external
+              :silent execute ":!~/bin/space-tdd-log.sh"
+              :silent execute ":!script/test " . command . "&> ~/tmp/tdd.log &" | redraw!
+            else
+              SpaceVimLog()
+              exec ":!script/test " . command . " | tee ~/tmp/tdd.log"
+            end
         elseif filereadable("Gemfile")
             exec ":!bundle exec rspec --color " . a:filename
         else
@@ -165,23 +165,14 @@ function! RunTests(filename)
     end
 endfunction
 
-function! RunTestsExternal(filename)
-    :w
-    :silent execute ":!~/bin/space-tdd-log.sh"
-    " :silent execute ":!rake &> ~/tmp/tdd.log &" | redraw!
-    if match(a:filename, '\.feature$') != -1
-        exec ":!script/features " . a:filename
-    else
-        if filereadable("script/test")
-            :silent execute ":!script/test " . a:filename . "&> ~/tmp/tdd.log &" | redraw!
-        elseif filereadable("Gemfile")
-            exec ":!bundle exec rspec --color " . a:filename
-        else
-            exec ":!rspec --color " . a:filename
-        end
-    end
+function! SpaceVimLog()
+    :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
+    :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
+    :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
+    :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
+    :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
+    :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
 endfunction
-
 
 " ------------------------------------------------------------------------------
 " Misc
