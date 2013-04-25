@@ -30,7 +30,8 @@ fi
 command='rspec'
 
 # skip acceptance tests
-options='--tag core'
+# options='--tag core'
+options=''
 
 if [ $need_rails ]; then
     command="ruby -S bundle exec $command"
