@@ -83,12 +83,6 @@ set wildmode=longest,list,full
 set wildmenu
 
 " ------------------------------------------------------------------------------
-" Coffee script
-" ------------------------------------------------------------------------------
-au BufWritePost *.coffee silent CoffeeMake!
-
-
-" ------------------------------------------------------------------------------
 " MacVim
 " ------------------------------------------------------------------------------
 if has("gui_running")
@@ -151,7 +145,7 @@ function! RunTests(filename, command_suffix, external)
     if a:external
       " for some reason calling space-tdd-log in function adds hanging
       :silent execute ":!~/bin/space-tdd-log.sh"
-      :silent execute ":!script/test " . command . "&> ~/tmp/tdd.log &" | redraw!
+      :silent execute ":!script/local_bin/test " . command . "&> ~/tmp/tdd.log &" | redraw!
     else
       :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
       :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
@@ -159,7 +153,7 @@ function! RunTests(filename, command_suffix, external)
       :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
       :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
       :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
-      exec ":!script/test " . command . " | tee ~/tmp/tdd.log"
+      exec ":!script/local_bin/test " . command . " | tee ~/tmp/tdd.log"
     end
 endfunction
 
