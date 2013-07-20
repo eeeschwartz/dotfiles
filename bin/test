@@ -27,15 +27,12 @@ else # we have no args
     filename='spec'
 fi
 
-command='rspec'
-
-# skip acceptance tests
-# options='--tag core'
-options=''
+command='rspec spec'
 
 if [ $need_rails ]; then
-    command="ruby -S bundle exec $command"
+    # command="ruby -S bundle exec $command"
+    command="zeus test"
 fi
 
-RAILS_ENV=test $command $filename $options
 
+$command $filename $options
