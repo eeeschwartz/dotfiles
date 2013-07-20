@@ -1,5 +1,12 @@
 set nocompatible
 
+" ----------------------------------------------------------------------------
+" Source the vimrc file after saving it
+" ----------------------------------------------------------------------------
+if has("autocmd")
+  autocmd bufwritepost .vimrc source $MYVIMRC
+endif
+
 set viminfo='20,\"500   " Keep a .viminfo file.
 
 " When editing a file, always jump to the last cursor position
@@ -33,6 +40,8 @@ set number
 set cul
 set hlsearch
 
+runtime macros/matchit.vim
+
 if !exists("autocommands_loaded")
   " au BufLeave * :wa
   au BufRead,BufNewFile  *.html  set filetype=mason
@@ -41,9 +50,9 @@ if !exists("autocommands_loaded")
   let autocommands_loaded = 1
 endif
 
-" ------------------------------------------------------------------------------
+" ----------------------------------------------------------------------------
 " Spacing
-" ------------------------------------------------------------------------------
+" ----------------------------------------------------------------------------
 " Global settings for all files (but may be overridden in ftplugin in the future).
 " http://vim.wikia.com/wiki/Keep_your_vimrc_file_clean
 set tabstop=2
@@ -53,45 +62,48 @@ set textwidth=80
 " colorcolumn appears at textwidth+1
 set colorcolumn=+1
 set autoindent
+" incrementalsearch
+set is
 
 au BufEnter *.js set sw=2 ts=2
 
-" ------------------------------------------------------------------------------
+" ----------------------------------------------------------------------------
 " Create swp files outside of working dir
-" ------------------------------------------------------------------------------
+" ----------------------------------------------------------------------------
 set backupdir=./.backup,.,/tmp
 
-" ------------------------------------------------------------------------------
+" ----------------------------------------------------------------------------
 " Pathogen
-" ------------------------------------------------------------------------------
+" ----------------------------------------------------------------------------
 call pathogen#infect()
 call pathogen#runtime_append_all_bundles()
 call pathogen#helptags()
 
-" ------------------------------------------------------------------------------
+" ----------------------------------------------------------------------------
 " Autosave macvim, remove trailing whitespace
-" ------------------------------------------------------------------------------
+" ----------------------------------------------------------------------------
 autocmd BufLeave,FocusLost * silent! wall
 autocmd BufWritePre * :%s/\s\+$//e
 
-" ------------------------------------------------------------------------------
+" ----------------------------------------------------------------------------
 " first tab hit will complete as much as possible,
 " the second tab hit will provide a list,
 " the third and subsequent tabs will cycle through completion
-" ------------------------------------------------------------------------------
+" ----------------------------------------------------------------------------
 set wildmode=longest,list,full
 set wildmenu
 
-" ------------------------------------------------------------------------------
+" ----------------------------------------------------------------------------
 " MacVim
-" ------------------------------------------------------------------------------
+" ----------------------------------------------------------------------------
 if has("gui_running")
   set guioptions=-t
 endif
 
-" ------------------------------------------------------------------------------
+" ----------------------------------------------------------------------------
 " RUNNING TESTS
-" ------------------------------------------------------------------------------
+" ----------------------------------------------------------------------------
+map <leader>s :call RunJasmineTests()<cr>
 map <leader>t :call RunTestFile(0, 0)<cr>
 map <leader>e :call RunTestFile(1, 0)<cr>
 map <leader>T :call RunNearestTest(0)<cr>
@@ -135,7 +147,11 @@ function! RunAllTests()
     :w
     " for some reason calling space-tdd-log in function adds hanging
     :silent execute ":!~/bin/space-tdd-log.sh"
-    :silent exec ":!bundle exec rspec spec --tag chicago &> ~/tmp/tdd.log &" | redraw!
+    :silent exec ":!zeus rspec spec > ~/tmp/tdd.log &" | redraw!
+endfunction
+
+function! RunJasmineTests()
+    :silent exec ":!open http://residenteval.dev/jasmine" | redraw!
 endfunction
 
 function! RunTests(filename, command_suffix, external)
@@ -157,24 +173,31 @@ function! RunTests(filename, command_suffix, external)
     end
 endfunction
 
-" ------------------------------------------------------------------------------
-" Misc
-" ------------------------------------------------------------------------------
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" MISC KEY MAPS
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Move around splits with <c-hjkl>
+nnoremap <c-j> <c-w>j
+nnoremap <c-k> <c-w>k
+nnoremap <c-h> <c-w>h
+nnoremap <c-l> <c-w>l
+" Can't be bothered to understand ESC vs <c-c> in insert mode
+imap <c-c> <esc>
 " Clear the search buffer when hitting return
 function! MapCR()
   nnoremap <cr> :nohlsearch<cr>
 endfunction
 call MapCR()
 
-" ------------------------------------------------------------------------------
+" ----------------------------------------------------------------------------
 " Control P
-" ------------------------------------------------------------------------------
+" ----------------------------------------------------------------------------
 let g:ctrlp_working_path_mode = 'r'
 
-" ------------------------------------------------------------------------------
+" ----------------------------------------------------------------------------
 " MULTIPURPOSE TAB KEY
 " Indent if we're at the beginning of a line. Else, do completion.
-" ------------------------------------------------------------------------------
+" ----------------------------------------------------------------------------
 function! InsertTabWrapper()
     let col = col('.') - 1
     if !col || getline('.')[col - 1] !~ '\k'
@@ -185,3 +208,17 @@ function! InsertTabWrapper()
 endfunction
 inoremap <tab> <c-r>=InsertTabWrapper()<cr>
 inoremap <s-tab> <c-n>
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" RENAME CURRENT FILE
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+function! RenameFile()
+    let old_name = expand('%')
+    let new_name = input('New file name: ', expand('%'), 'file')
+    if new_name != '' && new_name != old_name
+        exec ':saveas ' . new_name
+        exec ':silent !rm ' . old_name
+        redraw!
+    endif
+endfunction
+map <leader>n :call RenameFile()<cr>
