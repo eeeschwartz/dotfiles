@@ -29,7 +29,7 @@ plugins=(git github perl)
 source $ZSH/oh-my-zsh.sh
 
 # Customize to your needs...
-export PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/games:/usr/local/sbin:/usr/local/bin:/home/erik/bin
+export PATH=/sbin:/bin:/usr/sbin:/usr/local/bin:/usr/bin:/usr/games:/usr/local/sbin:/home/erik/bin
 #export PATH=/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin:/usr/texbin
 
 export EDITOR=vim
@@ -56,3 +56,6 @@ __git_files () {
     _wanted files expl 'local files' _files
 }
 
+
+### Added by the Heroku Toolbelt
+export PATH="/usr/local/heroku/bin:$PATH"
