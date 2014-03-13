@@ -1,4 +1,5 @@
 set nocompatible
+set backspace=2
 
 " ----------------------------------------------------------------------------
 " Source the vimrc file after saving it
@@ -76,6 +77,7 @@ set backupdir=./.backup,.,/tmp
 " Pathogen
 " ----------------------------------------------------------------------------
 call pathogen#infect()
+"call pathogen#incubate()
 call pathogen#runtime_append_all_bundles()
 call pathogen#helptags()
 
@@ -161,7 +163,7 @@ function! RunTests(filename, command_suffix, external)
     if a:external
       " for some reason calling space-tdd-log in function adds hanging
       :silent execute ":!~/bin/space-tdd-log.sh"
-      :silent execute ":!script/local_bin/test " . command . "&> ~/tmp/tdd.log &" | redraw!
+      :silent execute ":!~/dotfiles/bin/test " . command . "&> ~/tmp/tdd.log &" | redraw!
     else
       :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
       :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
@@ -169,7 +171,7 @@ function! RunTests(filename, command_suffix, external)
       :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
       :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
       :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
-      exec ":!script/local_bin/test " . command . " | tee ~/tmp/tdd.log"
+      exec ":!~/dotfiles/bin/test " . command . " | tee ~/tmp/tdd.log"
     end
 endfunction
 
