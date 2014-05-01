@@ -27,7 +27,8 @@ else # we have no args
     filename='spec'
 fi
 
-command='rspec spec'
+# command='rspec spec'
+command="zeus test"
 
 if [ $need_rails ]; then
     # command="ruby -S bundle exec $command"

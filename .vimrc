@@ -45,7 +45,7 @@ runtime macros/matchit.vim
 
 if !exists("autocommands_loaded")
   " au BufLeave * :wa
-  au BufRead,BufNewFile  *.html  set filetype=mason
+  au BufRead,BufNewFile  *.html  set filetype=html
   au BufRead,BufNewFile  *.mas   set filetype=mason
   au FileType            perl    :compiler perl
   let autocommands_loaded = 1
@@ -165,14 +165,18 @@ function! RunTests(filename, command_suffix, external)
       :silent execute ":!~/bin/space-tdd-log.sh"
       :silent execute ":!~/dotfiles/bin/test " . command . "&> ~/tmp/tdd.log &" | redraw!
     else
-      :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
-      :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
-      :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
-      :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
-      :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
-      :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
+      call OutputWhiteSpace()
       exec ":!~/dotfiles/bin/test " . command . " | tee ~/tmp/tdd.log"
     end
+endfunction
+
+function! OutputWhiteSpace()
+    :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
+    :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
+    :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
+    :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
+    :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
+    :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
 endfunction
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -195,6 +199,7 @@ call MapCR()
 " Control P
 " ----------------------------------------------------------------------------
 let g:ctrlp_working_path_mode = 'r'
+let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git\|tmp/cache\|.swp'
 
 " ----------------------------------------------------------------------------
 " MULTIPURPOSE TAB KEY
