@@ -1,3 +1,4 @@
 *.swp
 custom_plan.rb
 zeus.json
+\.DS_Store
