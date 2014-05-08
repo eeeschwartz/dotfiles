@@ -170,7 +170,9 @@ function! RunAllTests()
 endfunction
 
 function! RunJasmineTests()
-    :silent exec ":!open http://residenteval.dev/jasmine" | redraw!
+    :w
+    call OutputWhiteSpace()
+    exec ":!mocha" | redraw!
 endfunction
 
 function! RunTests(filename, command_suffix, external)
@@ -212,11 +214,14 @@ function! MapCR()
 endfunction
 call MapCR()
 
+" copy file name
+:nmap cfn :let @* = expand("%")
+
 " ----------------------------------------------------------------------------
 " Control P
 " ----------------------------------------------------------------------------
 let g:ctrlp_working_path_mode = 'r'
-let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git\|tmp/cache\|.swp'
+let g:ctrlp_custom_ignore = '.keep\|node_modules\|DS_Store\|git\|tmp/cache\|.swp'
 
 " ----------------------------------------------------------------------------
 " MULTIPURPOSE TAB KEY
