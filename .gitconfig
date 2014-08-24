@@ -1,0 +1,37 @@
+[user]
+    name = Erik Schwartz
+    email = erik@erikschwartz.net
+[color]
+    diff = auto
+    status = auto
+    branch = auto
+    ui = auto
+[log]
+    date = local
+[branch]
+#   autosetuprebase = always
+#   autosetupmerge = true
+[alias]
+    co      = checkout
+    vimdiff = difftool -y --tool=vimdiff -U99999 --patience
+    un      = log --branches --not --remotes --graph
+    d       = diff
+    dc      = diff --cached
+    br      = branch
+    st      = status
+    ap      = add -p
+    cm      = commit
+[difftool]
+    prompt = false
+[difftool "vimdiff"]
+    cmd = "vim -R -d -c 'wincmd l' \"$LOCAL\" \"$REMOTE\""
+[diff]
+    mnemonicprefix = true
+    renames = copies
+[push]
+  default = tracking
+[core]
+	excludesfile = /Users/erik/.gitignore
+[filter "media"]
+	clean = git-media-clean %f
+	smudge = git-media-smudge %f
