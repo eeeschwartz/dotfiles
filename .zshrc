@@ -43,10 +43,9 @@ PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
 
 alias be='bundle exec'
 alias gs='git status'
-alias rake='noglob rake'
-alias gurd='RAILS_ENV=test be guard'
-alias gitx='open /Applications/GitX.app'
-alias spec='RAILS_ENV=test be rspec'
+alias gp='git pull'
+alias gap='git add -p'
+alias subl='open /Applications/Sublime\ Text\ 2.app'
 
 # brew postgres install doesn't look in tmp by default
 export PGHOST=/tmp
