@@ -29,7 +29,7 @@ plugins=(git github perl)
 source $ZSH/oh-my-zsh.sh
 
 # Customize to your needs...
-export PATH=/sbin:/bin:/usr/sbin:/usr/local/bin:/usr/bin:/usr/games:/usr/local/sbin:/home/erik/bin
+export PATH=/sbin:/bin:/usr/local/bin:/usr/sbin:/usr/bin:/usr/games:/usr/local/sbin:/home/erik/bin
 #export PATH=/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin:/usr/texbin
 
 export EDITOR=vim

@@ -95,7 +95,6 @@ set backupdir=./.backup,.,/tmp
 " ----------------------------------------------------------------------------
 call pathogen#infect()
 "call pathogen#incubate()
-call pathogen#runtime_append_all_bundles()
 call pathogen#helptags()
 
 " ----------------------------------------------------------------------------
