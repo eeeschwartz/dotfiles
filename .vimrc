@@ -32,6 +32,13 @@ set listchars=tab:>.,trail:.,extends:#,nbsp:.
 set shell=bash
 let mapleader=","
 
+" ----------------------------------------------------------------------------
+" Pathogen
+" ----------------------------------------------------------------------------
+call pathogen#infect()
+"call pathogen#incubate()
+call pathogen#helptags()
+
 set t_Co=256
 set background=dark
 "colorscheme solarized
@@ -89,13 +96,6 @@ augroup END
 " Create swp files outside of working dir
 " ----------------------------------------------------------------------------
 set backupdir=./.backup,.,/tmp
-
-" ----------------------------------------------------------------------------
-" Pathogen
-" ----------------------------------------------------------------------------
-call pathogen#infect()
-"call pathogen#incubate()
-call pathogen#helptags()
 
 " ----------------------------------------------------------------------------
 " Autosave macvim, remove trailing whitespace
