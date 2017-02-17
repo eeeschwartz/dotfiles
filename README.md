@@ -9,3 +9,4 @@ Install
 * [ctrl-p](https://github.com/ctrlpvim/ctrlp.vim)
 * [vim-fugitive](https://github.com/tpope/vim-fugitive#installation)
 * [vim-unimpaired](https://github.com/tpope/vim-unimpaired)
+* [vim-daddy](https://github.com/tpope/vim-jdaddy)
