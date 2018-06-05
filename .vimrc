@@ -1,3 +1,4 @@
+
 set nocompatible
 set backspace=2
 
@@ -5,7 +6,8 @@ set backspace=2
 " Source the vimrc file after saving it
 " ----------------------------------------------------------------------------
 if has("autocmd")
-  autocmd bufwritepost .vimrc source $MYVIMRC
+  " better to edit vimrc in seperate instance and do vim spec/whatere_spec.rb to test new vimrc
+  " autocmd bufwritepost .vimrc source $MYVIMRC
 endif
 
 set viminfo='20,\"500   " Keep a .viminfo file.
@@ -180,11 +182,15 @@ function! RunTests(filename, command_suffix, external)
     let command = a:filename . a:command_suffix
     if a:external
       " for some reason calling space-tdd-log in function adds hanging
-      :silent execute ":!~/bin/space-tdd-log.sh"
-      :silent execute ":!~/dotfiles/bin/test " . command . "&> ~/tmp/tdd.log &" | redraw!
+      echo "external"
+      " :silent execute ":!~/bin/space-tdd-log.sh"
+      " :silent execute ":!~/dotfiles/bin/test " . command . "&> ~/tmp/tdd.log &" | redraw!
     else
-      call OutputWhiteSpace()
-      exec ":!~/dotfiles/bin/test " . command . " | tee ~/tmp/tdd.log"
+      " call OutputWhiteSpace()
+      " echo "internal"
+      " echo ":!~/dotfiles/bin/test " . command . " | tee ~/tmp/tdd.log"
+      " exec ":!~/dotfiles/bin/test " . command . " | tee ~/tmp/tdd.log"
+      exec ":!rspec " . command
     end
 endfunction
 
